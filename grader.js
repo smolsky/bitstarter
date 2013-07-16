@@ -22,6 +22,7 @@ References:
 */
 
 var fs = require('fs');
+var rest = require('restler');
 var program = require('commander');
 var cheerio = require('cheerio');
 var HTMLFILE_DEFAULT = "index.html";
@@ -33,6 +34,11 @@ var assertFileExists = function(infile) {
         console.log("%s does not exist. Exiting.", instr);
         process.exit(1); // http://nodejs.org/api/process.html#process_process_exit_code
     }
+    return instr;
+};
+
+var assertUrlExists = function(inUrl) {
+    var instr = inUrl.toString();
     return instr;
 };
 
@@ -65,7 +71,9 @@ if(require.main == module) {
     program
         .option('-c, --checks <check_file>', 'Path to checks.json', clone(assertFileExists), CHECKSFILE_DEFAULT)
         .option('-f, --file <html_file>', 'Path to index.html', clone(assertFileExists), HTMLFILE_DEFAULT)
+        .option('-u, --url <html_url>', 'URL to index.html', clone(assertUrlExists), null )
         .parse(process.argv);
+    console.log("Url: " + program.url );
     var checkJson = checkHtmlFile(program.file, program.checks);
     var outJson = JSON.stringify(checkJson, null, 4);
     console.log(outJson);
