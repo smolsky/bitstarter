@@ -63,11 +63,13 @@ var checkHtmlFile = function(htmlfile, checksfile) {
 
 var buildfn = function(checksfiles) {
     var response2console = function(result, response) {
+    console.log("BF: checkfeles: " + checksfiles.toString());
         if (result instanceof Error) {
             console.error('Error: ' + util.format(response.message));
         } else {
+            console.log("Responcese: checkfiles: " + checksfiles.toString());
             $ = cheerio.load(result);
-            var checks = loadChecks(checksfile).sort();
+            var checks = loadChecks(checksfiles).sort();
             var out = {};
             for(var ii in checks) {
               var present = $(checks[ii]).length > 0;
@@ -99,9 +101,11 @@ if(require.main == module) {
     console.log("Url: " + program.url );
     if( program.url != null )
     {
+      console.log("Url in work!");
       rest.get(program.url).on('complete', buildfn(program.checks));
     }else
     {
+      console.log("File in work!");
       var checkJson = checkHtmlFile(program.file, program.checks);
       var outJson = JSON.stringify(checkJson, null, 4);
       console.log(outJson);
